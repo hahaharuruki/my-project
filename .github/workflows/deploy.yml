@@ -4,7 +4,12 @@ on:
   push:
     branches:
       - main
-
+    paths:
+      - '.github/workflows/*.yml'
+      - 'src/**'
+      - 'public/**'
+      - 'package.json'
+      - 'package-lock.json'
 
 jobs:
   build-and-deploy:
@@ -28,5 +33,5 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.MY_GITHUB_TOKEN }}
         publish_dir: ./dist
