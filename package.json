@@ -13,7 +13,8 @@
     "mammoth": "^1.7.2",
     "pdfjs-dist": "^4.4.168",
     "util": "^0.12.5",
-    "vue": "^3.2.13"
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.13"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

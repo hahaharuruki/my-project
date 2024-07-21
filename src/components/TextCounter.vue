@@ -12,6 +12,7 @@
             <h1 class="title">文字数カウント</h1>
             <p class="description">
                 テキストボックスに入力された文字数をカウントします。テキストファイル、Wordファイル内の文字列もカウントできます。
+                <br>全てブラウザ上で完結するのでセキュリティーの心配も不要です。
             </p>
             <div class="buttons-top">
                 <button @click="pasteText" class="paste-button">ペースト</button>
@@ -142,8 +143,6 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  height: 100vh;
-  overflow-y: auto;
 }
 
 .text-counter {
