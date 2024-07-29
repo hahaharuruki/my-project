@@ -5,8 +5,9 @@
         ☰
       </div>
       <div class="dropdown-menu" v-if="isMenuOpen">
-        <router-link to="/" @click="toggleMenu">Home</router-link>
-        <router-link to="/how-to-use" @click="toggleMenu">How to Use</router-link>
+        <router-link to="/text-counter" @click="toggleMenu">文字数カウントツール</router-link>
+        <router-link to="/word-search-replace" @click="toggleMenu">単語検索・置換
+        </router-link>
       </div>
     </header>
     <main>
@@ -38,7 +39,7 @@ html, body, #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f0f8ff; /* 非常に薄い淡い青色 */
+  background-color: #f0f8ff;
 }
 
 #app {
@@ -91,7 +92,7 @@ background-color: #f0f0f0;
 
 main {
 flex-grow: 1;
-margin-top: 50px; /* ヘッダーの高さ分だけマージンを設定 */
+margin-top: 50px;
 display: flex;
 flex-direction: column;
 align-items: center;

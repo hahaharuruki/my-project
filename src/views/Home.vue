@@ -5,7 +5,7 @@
   </template>
   
   <script>
-  import TextCounter from '@/components/TextCounter.vue';
+  import TextCounter from '@/views/TextCounter.vue';
   
   export default {
     name: 'HomePage',

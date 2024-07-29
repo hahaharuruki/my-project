@@ -266,7 +266,7 @@
   
   .advertisement {
     width: 100%;
-    height: 50px; /* 広告セクションの高さを半分に設定 */
+    height: 50px;
     margin-bottom: 20px;
   }
   
