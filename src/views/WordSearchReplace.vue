@@ -19,6 +19,14 @@
         <button @click="pasteText" class="paste-button">ペースト</button>
         <button @click="clearText" class="clear-button">リセット</button>
       </div>
+      <div class="search-container">
+        <input v-model="searchQuery" placeholder="検索する単語" class="search-input" />
+        <button @click="searchWordInText" class="search-button">検索</button>
+      </div>
+      <div v-if="searchExecuted" class="search-results">
+        <p v-if="searchResults.length > 0">検索結果: {{ searchResults.length }} 件見つかりました</p>
+        <p v-else>検索結果: 見つかりませんでした</p>
+      </div>
       <div class="search-replace">
         <div class="search-replace-inputs">
           <input v-model="searchWord" placeholder="検索する単語" class="search-input" />
@@ -27,7 +35,7 @@
           <button @click="replaceText" class="replace-button">置換</button>
         </div>
       </div>
-      <textarea v-model="text" class="text-display" @input="autoResize"></textarea>
+      <div class="text-display" v-html="highlightedText"></div>
     </div>
 
     <!-- フッター広告スペース -->
@@ -43,16 +51,19 @@
 </template>
 
 <script>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, computed } from 'vue';
 import mammoth from 'mammoth';
 
 export default {
   setup() {
     const text = ref('');
+    const searchQuery = ref('');
+    const searchResults = ref([]);
     const searchWord = ref('');
     const replaceWord = ref('');
     const adsContainerTop = ref(null);
     const adsContainerBottom = ref(null);
+    const searchExecuted = ref(false);
 
     const pasteText = async () => {
       try {
@@ -136,11 +147,31 @@ export default {
       autoResize();
     };
 
+    const searchWordInText = () => {
+      searchResults.value = [];
+      searchExecuted.value = true;
+      const regex = new RegExp(searchQuery.value, 'g');
+      const matches = text.value.match(regex);
+      if (matches) {
+        searchResults.value = matches;
+      }
+    };
+
     const autoResize = () => {
       const textarea = document.querySelector('.text-display');
       textarea.style.height = 'auto';
       textarea.style.height = textarea.scrollHeight + 'px';
     };
+
+    const highlightText = () => {
+      const regex = new RegExp(`(${searchQuery.value})`, 'gi');
+      const highlightedText = text.value.replace(regex, '<span class="highlight">$1</span>');
+      return highlightedText;
+    };
+
+    const highlightedText = computed(() => {
+      return highlightText();
+    });
 
     onMounted(() => {
       const adsScript = document.createElement('script');
@@ -161,6 +192,8 @@ export default {
 
     return {
       text,
+      searchQuery,
+      searchResults,
       searchWord,
       replaceWord,
       pasteText,
@@ -168,9 +201,12 @@ export default {
       handleFileUpload,
       handleDrop,
       replaceText,
+      searchWordInText,
       autoResize,
       adsContainerTop,
-      adsContainerBottom
+      adsContainerBottom,
+      searchExecuted,
+      highlightedText
     };
   }
 };
@@ -202,95 +238,122 @@ export default {
 .description {
   font-size: 14px;
   margin-bottom: 20px;
-  text-align: left;
+text-align: left;
 }
 
 .buttons-top {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-  gap: 10px;
+display: flex;
+justify-content: center;
+margin-bottom: 10px;
+gap: 10px;
+}
+
+.search-container {
+display: flex;
+justify-content: center;
+margin-bottom: 10px;
+gap: 10px;
+}
+
+.search-button {
+background-color: #3490dc;
+color: white;
+padding: 8px 16px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .paste-button {
-  background-color: #3490dc;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+background-color: #3490dc;
+color: white;
+padding: 8px 16px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .clear-button {
-  background-color: #e3342f;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
+background-color: #e3342f;
+color: white;
+padding: 8px 16px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
 }
 
 .text-display {
-  width: 100%;
-  min-height: 150px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  font-size: 1em;
-  box-sizing: border-box;
-  overflow-wrap: break-word;
-  white-space: pre-wrap;
-  background-color: #f9f9f9;
-  resize: none;
+width: 100%;
+min-height: 150px;
+padding: 15px;
+border: 1px solid #ccc;
+border-radius: 5px;
+margin-bottom: 10px;
+font-size: 1em;
+box-sizing: border-box;
+overflow-wrap: break-word;
+white-space: pre-wrap;
+background-color: #f9f9f9;
+resize: none;
 }
 
 .search-replace {
-  margin-top: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+display: flex;
+flex-direction: column;
+align-items: center;
 }
 
 .search-replace-inputs {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 10px;
 }
 
 .search-input,
 .replace-input {
-  width: 40%;
-  max-width: 300px;
-  padding: 10px;
-  font-size: 14px;
+max-width: 300px;
+padding: 10px;
+font-size: 14px;
 }
 
 .arrow {
-  font-size: 24px;
+font-size: 24px;
 }
 
 .replace-button {
-  padding: 8px 16px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  background-color: #3490dc;
-  color: white;
-  cursor: pointer;
-  width: 100px;
+padding: 8px 16px;
+font-size: 14px;
+border: none;
+border-radius: 5px;
+background-color: #3490dc;
+color: white;
+cursor: pointer;
 }
 
 .advertisement {
-  width: 100%;
-  height: 100px;
-  margin-bottom: 20px;
+width: 100%;
+height: 100px;
+margin-bottom: 20px;
 }
 
 .ad-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.search-results {
+margin-bottom: 10px;
+width: 100%;
+max-width: 800px;
+padding: 10px;
+border: 1px solid #ccc;
+border-radius: 5px;
+background-color: #f9f9f9;
+}
+
+.highlight {
+background-color: yellow;
 }
 </style>
