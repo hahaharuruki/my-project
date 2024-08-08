@@ -5,7 +5,7 @@
       <ins class="adsbygoogle"
            style="display:block"
            data-ad-client="ca-pub-4238806087366657"
-           data-ad-slot="6108596121"
+           data-ad-slot="2812282702"
            data-ad-format="auto"
            data-full-width-responsive="true"></ins>
     </div>
@@ -46,7 +46,7 @@
       <ins class="adsbygoogle"
            style="display:block"
            data-ad-client="ca-pub-4238806087366657"
-           data-ad-slot="9601086758"
+           data-ad-slot="1499201036"
            data-ad-format="auto"
            data-full-width-responsive="true"></ins>
     </div>

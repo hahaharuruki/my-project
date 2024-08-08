@@ -8,8 +8,11 @@
         <router-link to="/text-counter" class="tool-link">
           文字数カウントツール
         </router-link>
-        <router-link to="/word-search-replace" class="tool-link">
-          単語検索・置換
+        <router-link to="/word-search" class="tool-link">
+          単語検索
+        </router-link>
+        <router-link to="/word-replace" class="tool-link">
+          単語置換
         </router-link>
       </div>
     </div>
