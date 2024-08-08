@@ -7,7 +7,8 @@
       <div class="dropdown-menu" v-if="isMenuOpen">
         <router-link to="/" @click="toggleMenu">ツール一覧</router-link>
         <router-link to="/text-counter" @click="toggleMenu">文字数カウントツール</router-link>
-        <router-link to="/word-search-replace" @click="toggleMenu">単語検索・置換</router-link>
+        <router-link to="/word-search" @click="toggleMenu">単語検索</router-link>
+        <router-link to="/word-replace" @click="toggleMenu">単語置換</router-link>
       </div>
     </header>
     <main>
