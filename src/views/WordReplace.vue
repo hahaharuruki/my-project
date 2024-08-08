@@ -352,6 +352,7 @@ border-radius: 5px;
 background-color: #3490dc;
 color: white;
 cursor: pointer;
+width: 200px;
 }
 
 .advertisement {
