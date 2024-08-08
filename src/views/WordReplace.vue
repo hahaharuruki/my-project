@@ -1,5 +1,5 @@
 <template>
-  <div class="word-search-replace-container">
+  <div class="word-replace-container">
     <!-- ヘッダー広告スペース -->
     <div ref="adsContainerTop" class="advertisement">
       <ins class="adsbygoogle"
@@ -11,21 +11,13 @@
     </div>
 
     <div class="content-container" @dragover.prevent @drop.prevent="handleDrop">
-      <h1 class="title">単語検索・置換</h1>
+      <h1 class="title">単語置換</h1>
       <p class="description">
-        テキストボックスに入力された単語を検索し、指定された単語に置換します。テキストファイル、Wordファイル内の文字列も処理できます。
+        テキストボックスに入力された単語を置換します。テキストファイル、Wordファイル内の文字列も処理できます。ファイルをドラッグ&ドロップしてください。
       </p>
       <div class="buttons-top">
         <button @click="pasteText" class="paste-button">ペースト</button>
         <button @click="clearText" class="clear-button">リセット</button>
-      </div>
-      <div class="search-container">
-        <input v-model="searchQuery" placeholder="検索する単語" class="search-input" />
-        <button @click="highlightText" class="search-button">検索</button>
-      </div>
-      <div v-if="searchPerformed" class="search-results">
-        <p v-if="searchResults.length">検索結果: {{ searchResults.length }}件見つかりました。</p>
-        <p v-else>検索結果は見つかりませんでした。</p>
       </div>
       <div class="search-replace">
         <div class="search-replace-inputs">
@@ -36,8 +28,15 @@
         </div>
       </div>
       <div class="textarea-container">
-        <pre class="highlighted-text" v-html="highlightedText"></pre>
-        <textarea v-model="text" class="text-display" @input="autoResize"></textarea>
+        <div class="textarea-wrapper">
+          <div class="textarea-label">置換前</div>
+          <textarea v-model="text" class="text-display" @input="autoResize"></textarea>
+        </div>
+        <span class="arrow-right">→</span>
+        <div class="textarea-wrapper">
+          <div class="textarea-label">置換後</div>
+          <pre class="highlighted-text" v-html="showReplacedText ? highlightedText : ''"></pre>
+        </div>
       </div>
     </div>
 
@@ -60,9 +59,8 @@ import mammoth from 'mammoth';
 export default {
   setup() {
     const text = ref('');
-    const searchQuery = ref('');
-    const searchResults = ref([]);
-    const searchPerformed = ref(false);
+    const replacedText = ref('');  // 新しく右側のテキスト用に追加
+    const showReplacedText = ref(false);  // 置換後のテキストの表示を制御
     const searchWord = ref('');
     const replaceWord = ref('');
     const adsContainerTop = ref(null);
@@ -76,6 +74,8 @@ export default {
           return;
         }
         text.value = clipText;
+        replacedText.value = '';  // 置換後のテキストをクリア
+        showReplacedText.value = false;  // 置換後のテキストを非表示
         await nextTick();
         autoResize();
       } catch (error) {
@@ -85,8 +85,8 @@ export default {
 
     const clearText = async () => {
       text.value = '';
-      searchResults.value = [];
-      searchPerformed.value = false;
+      replacedText.value = '';  // 置換後のテキストをクリア
+      showReplacedText.value = false;  // 置換後のテキストを非表示
       await nextTick();
       autoResize();
     };
@@ -119,6 +119,8 @@ export default {
           try {
             const result = await mammoth.extractRawText({ arrayBuffer });
             text.value = result.value;
+            replacedText.value = '';  // 置換後のテキストをクリア
+            showReplacedText.value = false;  // 置換後のテキストを非表示
             await nextTick();
             autoResize();
           } catch (error) {
@@ -135,6 +137,8 @@ export default {
       const reader = new FileReader();
       reader.onload = async (e) => {
         text.value = e.target.result;
+        replacedText.value = '';  // 置換後のテキストをクリア
+        showReplacedText.value = false;  // 置換後のテキストを非表示
         await nextTick();
         autoResize();
       };
@@ -147,30 +151,14 @@ export default {
         return;
       }
       const searchRegex = new RegExp(searchWord.value, 'g');
-      text.value = text.value.replace(searchRegex, replaceWord.value);
+      replacedText.value = text.value.replace(searchRegex, replaceWord.value);  // 置換後のテキストを設定
+      showReplacedText.value = true;  // 置換後のテキストを表示
       await nextTick();
       autoResize();
     };
 
-    const highlightText = () => {
-      searchPerformed.value = true;
-      searchResults.value = [];
-      if (searchQuery.value === '') {
-        return;
-      }
-      const regex = new RegExp(searchQuery.value, 'gi');
-      const matches = text.value.match(regex);
-      if (matches) {
-        searchResults.value = matches;
-      }
-    };
-
     const highlightedText = computed(() => {
-      if (searchQuery.value === '') {
-        return text.value.replace(/\n/g, '<br>');
-      }
-      const regex = new RegExp(`(${searchQuery.value})`, 'gi');
-      return text.value.replace(regex, '<mark>$1</mark>').replace(/\n/g, '<br>');
+      return replacedText.value.replace(/\n/g, '<br>');  // 置換後のテキストを表示
     });
 
     const autoResize = () => {
@@ -178,6 +166,11 @@ export default {
       if (textarea) {
         textarea.style.height = 'auto';
         textarea.style.height = textarea.scrollHeight + 'px';
+      }
+      const pre = document.querySelector('.highlighted-text');
+      if (pre) {
+        pre.style.height = 'auto';
+        pre.style.height = pre.scrollHeight + 'px';
       }
     };
 
@@ -200,9 +193,6 @@ export default {
 
     return {
       text,
-      searchQuery,
-      searchResults,
-      searchPerformed,
       searchWord,
       replaceWord,
       pasteText,
@@ -210,22 +200,23 @@ export default {
       handleFileUpload,
       handleDrop,
       replaceText,
-      highlightText,
       autoResize,
       highlightedText,
       adsContainerTop,
-      adsContainerBottom
+      adsContainerBottom,
+      showReplacedText
     };
   }
 };
 </script>
 
 <style scoped>
-.word-search-replace-container {
+.word-replace-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  width: 100%;
 }
 
 .content-container {
@@ -256,22 +247,6 @@ export default {
   gap: 10px;
 }
 
-.search-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-  gap: 10px;
-}
-
-.search-button {
-  background-color: #3490dc;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
 .paste-button {
   background-color: #3490dc;
   color: white;
@@ -283,34 +258,29 @@ export default {
 
 .clear-button {
   background-color: #e3342f;
-color: white;
-padding: 8px 16px;
+  color: white;
+  padding: 8px 16px;
 border: none;
 border-radius: 5px;
 cursor: pointer;
 }
 
 .textarea-container {
-position: relative;
+display: flex;
+justify-content: space-between;
 width: 100%;
 }
 
-.highlighted-text {
-position: absolute;
-top: 0;
-left: 0;
-right: 0;
-bottom: 0;
-white-space: pre-wrap;
-word-wrap: break-word;
-padding: 15px;
-border: 1px solid #ccc;
-border-radius: 5px;
-margin-bottom: 10px;
-font-size: 1em;
-box-sizing: border-box;
-background-color: #f9f9f9;
-pointer-events: none;
+.textarea-wrapper {
+width: 48%;
+display: flex;
+flex-direction: column;
+}
+
+.textarea-label {
+text-align: center;
+font-weight: bold;
+margin-bottom: 5px;
 }
 
 .text-display {
@@ -324,11 +294,30 @@ font-size: 1em;
 box-sizing: border-box;
 overflow-wrap: break-word;
 white-space: pre-wrap;
-background-color: transparent;
+background-color: #f9f9f9;
 resize: none;
-color: transparent;
-caret-color: black;
-z-index: 1;
+font-family: inherit;
+}
+
+.highlighted-text {
+width: 100%;
+min-height: 150px;
+padding: 15px;
+border: 1px solid #ccc;
+border-radius: 5px;
+margin-bottom: 10px;
+font-size: 1em;
+box-sizing: border-box;
+overflow-wrap: break-word;
+white-space: pre-wrap;
+background-color: #f9f9f9;
+font-family: inherit;
+}
+
+.arrow-right {
+align-self: center;
+font-size: 24px;
+margin: 0 10px;
 }
 
 .search-replace {
@@ -346,7 +335,7 @@ margin-bottom: 10px;
 
 .search-input,
 .replace-input {
-max-width: 300px;
+width: 100%;
 padding: 10px;
 font-size: 14px;
 }
@@ -375,15 +364,5 @@ margin-bottom: 20px;
 width: 100%;
 height: 100%;
 object-fit: cover;
-}
-
-.search-results {
-margin-bottom: 10px;
-width: 100%;
-max-width: 800px;
-padding: 10px;
-border: 1px solid #ccc;
-border-radius: 5px;
-background-color: #f9f9f9;
 }
 </style>
