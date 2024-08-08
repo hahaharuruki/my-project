@@ -3,7 +3,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MainHome from '../views/MainHome.vue';
 import TextCounter from '../views/TextCounter.vue';
-import WordSearchReplace from '../views/WordSearchReplace.vue';
+import WordSearch from '../views/WordSearch.vue';
+import WordReplace from '../views/WordReplace.vue';
 
 const routes = [
   {
@@ -33,16 +34,29 @@ const routes = [
     }
   },
   {
-    path: '/word-search-replace',
-    name: 'WordSearchReplace',
-    component: WordSearchReplace,
+    path: '/word-search',
+    name: 'WordSearch',
+    component: WordSearch,
     meta: {
-      title: '単語検索・置換 - 効率的なテキスト編集ツール',
-      description: '単語検索と置換ができる便利なツール。テキストボックスに入力された単語を検索し、指定された単語に置換します。テキストファイル、Wordファイル内の文字列も処理できます。',
-      ogTitle: '単語検索・置換 - 効率的なテキスト編集ツール',
-      ogDescription: '単語検索と置換ができる便利なツール。テキストボックスに入力された単語を検索し、指定された単語に置換します。テキストファイル、Wordファイル内の文字列も処理できます。',
+      title: '単語検索 - 効率的なテキスト検索ツール',
+      description: '単語検索ができる便利なツール。テキストボックスに入力された単語を検索します。テキストファイル、Wordファイル内の文字列も処理できます。',
+      ogTitle: '単語検索 - 効率的なテキスト編集ツール',
+      ogDescription: '単語検索ができる便利なツール。テキストボックスに入力された単語を検索します。テキストファイル、Wordファイル内の文字列も処理できます。',
       ogImage: '<%= BASE_URL %>og-image.png',
-      ogUrl: 'https://yourwebsite.com/word-search-replace'
+      ogUrl: 'https://yourwebsite.com/word-search'
+    }
+  },
+  {
+    path: '/word-replace',
+    name: 'WordReplace',
+    component: WordReplace,
+    meta: {
+      title: '単語置換 - 効率的なテキスト編集ツール',
+      description: '単語置換ができる便利なツール。テキストボックスに入力された単語を指定された単語に置換します。テキストファイル、Wordファイル内の文字列も処理できます。',
+      ogTitle: '単語置換 - 効率的なテキスト編集ツール',
+      ogDescription: '単語置換ができる便利なツール。テキストボックスに入力された単語を指定された単語に置換します。テキストファイル、Wordファイル内の文字列も処理できます。',
+      ogImage: '<%= BASE_URL %>og-image.png',
+      ogUrl: 'https://yourwebsite.com/word-replace'
     }
   }
 ];
