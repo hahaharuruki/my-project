@@ -5,6 +5,7 @@ import MainHome from '../views/MainHome.vue';
 import TextCounter from '../views/TextCounter.vue';
 import WordSearch from '../views/WordSearch.vue';
 import WordReplace from '../views/WordReplace.vue';
+import PrivacyPolicy from '../views/PrivacyPolicy.vue';
 
 const routes = [
   {
@@ -17,7 +18,7 @@ const routes = [
       ogTitle: 'ツールのホームページ',
       ogDescription: 'ここでは、以下のツールを利用できます：',
       ogImage: '<%= BASE_URL %>og-image.png',
-      ogUrl: 'https://yourwebsite.com'
+      ogUrl: 'https://vue-tools.com'
     }
   },
   {
@@ -30,7 +31,7 @@ const routes = [
       ogTitle: '文字数カウントツール - 高品質な文字数カウントサービス',
       ogDescription: '無料で利用できる文字数カウントツール。テキストの文字数、空白を除いた文字数、改行を除いた文字数を瞬時にカウントします。さらに、テキストファイルやWordファイルをアップロードして文字数をカウントすることもできます。',
       ogImage: '<%= BASE_URL %>og-image.png',
-      ogUrl: 'https://yourwebsite.com/text-counter'
+      ogUrl: 'https://vue-tools/text-counter'
     }
   },
   {
@@ -43,7 +44,7 @@ const routes = [
       ogTitle: '単語検索 - 効率的なテキスト編集ツール',
       ogDescription: '単語検索ができる便利なツール。テキストボックスに入力された単語を検索します。テキストファイル、Wordファイル内の文字列も処理できます。',
       ogImage: '<%= BASE_URL %>og-image.png',
-      ogUrl: 'https://yourwebsite.com/word-search'
+      ogUrl: 'https://vue-tools/word-search'
     }
   },
   {
@@ -56,7 +57,20 @@ const routes = [
       ogTitle: '単語置換 - 効率的なテキスト編集ツール',
       ogDescription: '単語置換ができる便利なツール。テキストボックスに入力された単語を指定された単語に置換します。テキストファイル、Wordファイル内の文字列も処理できます。',
       ogImage: '<%= BASE_URL %>og-image.png',
-      ogUrl: 'https://yourwebsite.com/word-replace'
+      ogUrl: 'https://vue-tools/word-replace'
+    }
+  },
+  {
+    path: '/privacy-policy',
+    name: 'PrivacyPolicy',
+    component: PrivacyPolicy,
+    meta: {
+      title: 'プライバシーポリシー',
+      description: 'vue-tools.comのツールに関するプライバシーポリシーです。',
+      ogTitle: 'プライバシーポリシー',
+      ogDescription: 'vue-tools.comのツールに関するプライバシーポリシーです。',
+      ogImage: '<%= BASE_URL %>og-image.png',
+      ogUrl: 'https://vue-tools/word-replace'
     }
   }
 ];

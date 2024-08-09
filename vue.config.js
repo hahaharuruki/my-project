@@ -9,6 +9,7 @@ const routes = [
   '/text-counter',
   '/word-search',
   '/word-replace',
+  '/privacy-policy',
 ];
 
 module.exports = defineConfig({

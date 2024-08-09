@@ -14,6 +14,9 @@
         <router-link to="/word-replace" class="tool-link">
           単語置換
         </router-link>
+        <router-link to="/privacy-policy" class="tool-link">
+          プライバシーポリシー
+        </router-link>
       </div>
     </div>
   </template>
